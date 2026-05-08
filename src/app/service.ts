@@ -19,6 +19,9 @@ export const makeApp = ({
   let ejectorCycleTimer: NodeJS.Timer | null = null
 
   const run = async () => {
+
+    logger.info('About to test webook vars "' + config.TEST_EXIT_WEBHOOK + ' ' + config.VALIDATOR_EXIT_WEBHOOK)
+
     if (config.TEST_EXIT_WEBHOOK && config.VALIDATOR_EXIT_WEBHOOK) {
       logger.info('TEST_EXIT_WEBHOOK is enabled, sending test webhook call')
       await webhookProcessor.send(config.VALIDATOR_EXIT_WEBHOOK, {
