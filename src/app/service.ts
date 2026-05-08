@@ -19,6 +19,18 @@ export const makeApp = ({
   let ejectorCycleTimer: NodeJS.Timer | null = null
 
   const run = async () => {
+    if (config.TEST_EXIT_WEBHOOK && config.VALIDATOR_EXIT_WEBHOOK) {
+      logger.info('TEST_EXIT_WEBHOOK is enabled, sending test webhook call')
+      await webhookProcessor.send(config.VALIDATOR_EXIT_WEBHOOK, {
+        validatorIndex: '0',
+        validatorPubkey:
+          '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+      })
+      logger.info('Test webhook call completed, exiting')
+      return
+    }
+
+
     const version = await appInfoReader.getVersion()
     const mode = config.MESSAGES_LOCATION ? 'message' : 'webhook'
 
@@ -36,17 +48,6 @@ export const makeApp = ({
         mode,
       })
       .inc()
-
-    if (config.TEST_EXIT_WEBHOOK && config.VALIDATOR_EXIT_WEBHOOK) {
-      logger.info('TEST_EXIT_WEBHOOK is enabled, sending test webhook call')
-      await webhookProcessor.send(config.VALIDATOR_EXIT_WEBHOOK, {
-        validatorIndex: '0',
-        validatorPubkey:
-          '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-      })
-      logger.info('Test webhook call completed, exiting')
-      return
-    }
 
     await executionApi.checkSync()
     await consensusApi.checkSync()
