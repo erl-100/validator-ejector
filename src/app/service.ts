@@ -11,6 +11,7 @@ export const makeApp = ({
   executionApi,
   consensusApi,
   appInfoReader,
+  webhookProcessor,
 }: Dependencies) => {
   const { OPERATOR_ID, BLOCKS_PRELOAD, JOB_INTERVAL, OPERATOR_IDENTIFIERS } =
     config
@@ -35,6 +36,17 @@ export const makeApp = ({
         mode,
       })
       .inc()
+
+    if (config.TEST_EXIT_WEBHOOK && config.VALIDATOR_EXIT_WEBHOOK) {
+      logger.info('TEST_EXIT_WEBHOOK is enabled, sending test webhook call')
+      await webhookProcessor.send(config.VALIDATOR_EXIT_WEBHOOK, {
+        validatorIndex: '0',
+        validatorPubkey:
+          '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+      })
+      logger.info('Test webhook call completed, exiting')
+      return
+    }
 
     await executionApi.checkSync()
     await consensusApi.checkSync()

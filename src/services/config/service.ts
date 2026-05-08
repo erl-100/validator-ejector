@@ -80,6 +80,7 @@ export const makeConfig = ({
     RUN_METRICS: optional(() => bool(env.RUN_METRICS)) ?? false,
     RUN_HEALTH_CHECK: optional(() => bool(env.RUN_HEALTH_CHECK)) ?? true,
 
+    TEST_EXIT_WEBHOOK: optional(() => bool(env.TEST_EXIT_WEBHOOK)) ?? false,
     DRY_RUN: optional(() => bool(env.DRY_RUN)) ?? false,
     TRUST_MODE:
       optional(() => bool(env.TRUST_MODE)) ??

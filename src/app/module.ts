@@ -158,6 +158,7 @@ export const makeAppModule = async () => {
     executionApi,
     consensusApi,
     appInfoReader,
+    webhookProcessor,
   })
 
   return {
